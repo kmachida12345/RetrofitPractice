@@ -9,10 +9,12 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.lifecycleScope
+import com.bumptech.glide.Glide
 import com.example.retrofitpractice.model.ForecastInfo
 import com.example.retrofitpractice.model.WeatherInfo
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
@@ -92,6 +94,15 @@ class MainActivity : AppCompatActivity() {
                                 Log.d("hoge response ", response.toString())
                                 val forecastRes = api.getWeatherForecast(location.latitude, location.longitude, API_KEY)
                                 Log.d("hoge forecastRes ", forecastRes.toString())
+
+                                val imageUrl = "http://openweathermap.org/img/wn/${response.weather[0].icon}@2x.png"
+
+                                Log.d(TAG, "onCreate: hoge imageUrl=$imageUrl")
+
+                                launch(Dispatchers.Main) {
+                                    Glide.with(applicationContext).load("https://www.google.com/images/branding/googlelogo/1x/googlelogo_color_272x92dp.png").into(findViewById(R.id.hoge_image))
+                                }
+
                             }
                         }
             }
