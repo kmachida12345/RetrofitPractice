@@ -100,7 +100,35 @@ class MainActivity : AppCompatActivity() {
                                 Log.d(TAG, "onCreate: hoge imageUrl=$imageUrl")
 
                                 launch(Dispatchers.Main) {
-                                    Glide.with(applicationContext).load("https://www.google.com/images/branding/googlelogo/1x/googlelogo_color_272x92dp.png").into(findViewById(R.id.hoge_image))
+                                    Glide.with(this@MainActivity)
+                                        .load(imageUrl)
+//                                        .load("https://www.google.com/images/branding/googlelogo/1x/googlelogo_color_272x92dp.png")
+//                                        .listener(object : RequestListener<Drawable> {
+//                                            override fun onLoadFailed(
+//                                                e: GlideException?,
+//                                                model: Any?,
+//                                                target: Target<Drawable>?,
+//                                                isFirstResource: Boolean
+//                                            ): Boolean {
+//                                                // Cleartext HTTP traffic to openweathermap.org not permitted
+//                                                Log.d(TAG, "onLoadFailed: hoge load failed. $e")
+//                                                return true
+//                                            }
+//
+//                                            override fun onResourceReady(
+//                                                resource: Drawable?,
+//                                                model: Any?,
+//                                                target: Target<Drawable>?,
+//                                                dataSource: DataSource?,
+//                                                isFirstResource: Boolean
+//                                            ): Boolean {
+//                                                Log.d(TAG, "onResourceReady: hoge load succeeded $resource")
+////                                                findViewById<ImageView>(R.id.hoge_image).setImageDrawable(resource)
+//                                                return false
+//                                            }
+//
+//                                        })
+                                        .into(findViewById(R.id.hoge_image))
                                 }
 
                             }
