@@ -28,6 +28,11 @@ class MainActivity : AppCompatActivity() {
 
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
 
+        val api = Retrofit.Builder()
+                .addConverterFactory(GsonConverterFactory.create())
+                .baseUrl("https://api.openweathermap.org")
+                .build().create(ApiInterface::class.java)
+
         // 公式より https://developer.android.com/training/permissions/requesting?hl=ja#allow-system-manage-request-code
         // Register the permissions callback, which handles the user's response to the
         // system permissions dialog. Save the return value, an instance of
@@ -45,6 +50,16 @@ class MainActivity : AppCompatActivity() {
                                 .addOnSuccessListener { location: Location? ->
                                     // Got last known location. In some rare situations this can be null.
                                     Log.d(TAG, "onCreate: hoge location=$location")
+
+                                    if (location == null)
+                                        return@addOnSuccessListener
+
+                                    lifecycleScope.launch {
+                                        val response = api.getWeather(location.latitude, location.longitude, API_KEY)
+                                        Log.d("hoge response ", response.toString())
+                                        val forecastRes = api.getWeatherForecast(location.latitude, location.longitude, API_KEY)
+                                        Log.d("hoge forecastRes ", forecastRes.toString())
+                                    }
                                 }
 
                     } else {
@@ -63,6 +78,22 @@ class MainActivity : AppCompatActivity() {
                     Manifest.permission.ACCESS_COARSE_LOCATION
             ) == PackageManager.PERMISSION_GRANTED -> {
                 // You can use the API that requires the permission.
+
+                fusedLocationClient.lastLocation
+                        .addOnSuccessListener { location: Location? ->
+                            // Got last known location. In some rare situations this can be null.
+                            Log.d(TAG, "onCreate: hoge location=$location")
+
+                            if (location == null)
+                                return@addOnSuccessListener
+
+                            lifecycleScope.launch {
+                                val response = api.getWeather(location.latitude, location.longitude, API_KEY)
+                                Log.d("hoge response ", response.toString())
+                                val forecastRes = api.getWeatherForecast(location.latitude, location.longitude, API_KEY)
+                                Log.d("hoge forecastRes ", forecastRes.toString())
+                            }
+                        }
             }
             shouldShowRequestPermissionRationale(Manifest.permission.ACCESS_COARSE_LOCATION) -> {
                 // In an educational UI, explain to the user why your app requires this
@@ -77,19 +108,6 @@ class MainActivity : AppCompatActivity() {
                 requestPermissionLauncher.launch(
                         Manifest.permission.ACCESS_COARSE_LOCATION)
             }
-        }
-
-
-        val api = Retrofit.Builder()
-                .addConverterFactory(GsonConverterFactory.create())
-                .baseUrl("https://api.openweathermap.org")
-                .build().create(ApiInterface::class.java)
-
-        lifecycleScope.launch {
-            val response = api.getWeather(35.425007, 139.6658144, API_KEY)
-            Log.d("hoge response ", response.toString())
-            val forecastRes = api.getWeatherForecast(35.425007, 139.6658144, API_KEY)
-            Log.d("hoge forecastRes ", forecastRes.toString())
         }
     }
 
