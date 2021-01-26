@@ -1,6 +1,11 @@
 package com.example.retrofitpractice.model
 
-data class WeatherResponse(
+data class ForecastInfo(
+    val list: List<WeatherInfo>
+)
+
+data class WeatherInfo(
+    val dt: Int,
     val weather: List<Weather>,
 ) {
 }
