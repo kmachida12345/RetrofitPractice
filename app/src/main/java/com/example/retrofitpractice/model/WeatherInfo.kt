@@ -7,6 +7,7 @@ data class ForecastInfo(
 data class WeatherInfo(
     val dt: Int,
     val weather: List<Weather>,
+    val name: String
 ) {
 }
 
