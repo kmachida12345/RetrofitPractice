@@ -5,6 +5,7 @@ import android.content.pm.PackageManager
 import android.location.Location
 import android.os.Bundle
 import android.util.Log
+import android.widget.TextView
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
@@ -100,6 +101,7 @@ class MainActivity : AppCompatActivity() {
                                 Log.d(TAG, "onCreate: hoge imageUrl=$imageUrl")
 
                                 launch(Dispatchers.Main) {
+                                    findViewById<TextView>(R.id.hoge_text).text = "${response.name}のてんき"
                                     Glide.with(this@MainActivity)
                                         .load(imageUrl)
 //                                        .load("https://www.google.com/images/branding/googlelogo/1x/googlelogo_color_272x92dp.png")
