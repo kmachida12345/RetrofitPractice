@@ -11,6 +11,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.lifecycleScope
 import com.bumptech.glide.Glide
+import com.example.retrofitpractice.model.ChannelInfo
 import com.example.retrofitpractice.model.ForecastInfo
 import com.example.retrofitpractice.model.WeatherInfo
 import com.google.android.gms.location.FusedLocationProviderClient
@@ -30,6 +31,19 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
 
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
+
+
+        val channelInfoApi = Retrofit
+            .Builder()
+            .addConverterFactory(GsonConverterFactory.create()) // ここがMoshiでもおk Moshiならnullセーフらしい
+            .baseUrl("https://live.fc2.com")
+            .build()
+            .create(HogeApiInterface::class.java)
+
+        lifecycleScope.launch {
+            val channelList = channelInfoApi.getChannelList()
+            Log.d("aaaa", "size=${channelList.channel.size}, res=$channelList")
+        }
 
         val api = Retrofit.Builder()
                 .addConverterFactory(GsonConverterFactory.create())
@@ -162,6 +176,11 @@ class MainActivity : AppCompatActivity() {
 
         @GET("/data/2.5/forecast/")
         suspend fun getWeatherForecast(@Query("lat") lat: Double, @Query("lon") lon: Double, @Query("appid") appId: String): ForecastInfo
+    }
+
+    interface HogeApiInterface {
+        @GET("/contents/allchannellist.php")
+        suspend fun getChannelList(): ChannelInfo
     }
 
 }
